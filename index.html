@@ -53,6 +53,12 @@ description: "「YOU ARE WHAT YOU SAY」"
     <title>Intelligent Machines - Interactive Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #8a2be2;
+            --secondary-color: #4b0082;
+            --dark-bg: #0a0a14;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -60,24 +66,90 @@ description: "「YOU ARE WHAT YOU SAY」"
         }
         
         body {
-            background: #000;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
+            background: var(--dark-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        /* 主容器 - 用于滚动 */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 头部导航 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            z-index: 50;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            padding: 5px 10px;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #fff;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        /* 英雄区域 - 包含互动效果 */
+        .hero {
+            height: 85vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
+            position: relative;
+            padding: 20px;
+            text-align: center;
         }
         
         .interactive-background {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
+            overflow: hidden;
         }
         
         .interactive-canvas {
@@ -88,129 +160,13 @@ description: "「YOU ARE WHAT YOU SAY」"
             height: 100%;
         }
         
-        .content {
-            text-align: center;
-            max-width: 800px;
-            padding: 20px;
-            z-index: 10;
-        }
-        
-        .main-title {
-            font-size: 5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-            position: relative;
-            transition: all 0.4s ease;
-        }
-        
-        .main-title:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 15px rgba(138, 43, 226, 0.7), 0 0 30px rgba(75, 0, 130, 0.5);
-            cursor: default;
-        }
-        
-        .subtitle {
-            font-size: 1.6rem;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #aaa;
-            margin-bottom: 3rem;
-            transition: all 0.4s ease;
-            position: relative;
-        }
-        
-        .subtitle:hover {
-            color: #fff;
-            letter-spacing: 5px;
-        }
-        
-        .description {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #bbb;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            transition: all 0.3s ease;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        
-        .description:hover {
-            background: rgba(75, 0, 130, 0.1);
-            box-shadow: 0 0 20px rgba(75, 0, 130, 0.3);
-            transform: translateY(-3px);
-        }
-        
-        .location-year {
-            font-size: 1.1rem;
-            color: #888;
-            margin-bottom: 2rem;
-            letter-spacing: 1px;
-        }
-        
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .interactive-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(138, 43, 226, 0.1);
-            border: 1px solid rgba(138, 43, 226, 0.4);
-            color: #8a2be2;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .interactive-btn:hover {
-            transform: scale(1.15);
-            background: rgba(138, 43, 226, 0.2);
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.6), 
-                        0 0 30px rgba(75, 0, 130, 0.3);
-            color: #fff;
-        }
-        
-        .interactive-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(138,43,226,0.4) 0%, transparent 70%);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
-            z-index: -1;
-        }
-        
-        .interactive-btn:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-        
         .particles {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 5;
         }
         
         .particle {
@@ -220,13 +176,100 @@ description: "「YOU ARE WHAT YOU SAY」"
             background: rgba(138, 43, 226, 0.7);
             border-radius: 50%;
             box-shadow: 0 0 5px #8a2be2, 0 0 10px #8a2be2;
-            animation: glow 2s infinite alternate;
+            animation: glow 3s infinite alternate;
+            opacity: 0.6;
         }
         
         .particle:nth-child(2n) {
             background: rgba(75, 0, 130, 0.7);
             box-shadow: 0 0 5px #4b0082, 0 0 10px #4b0082;
-            animation-delay: 1s;
+            animation-delay: 1.5s;
+        }
+        
+        .main-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1.5px;
+            text-transform: uppercase;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+        
+        .main-title:hover {
+            transform: scale(1.03);
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.6), 0 0 20px rgba(75, 0, 130, 0.4);
+            cursor: default;
+        }
+        
+        .subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.8rem);
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #aaa;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .subtitle:hover {
+            color: #fff;
+            letter-spacing: 4px;
+        }
+        
+        .description {
+            font-size: clamp(1rem, 1.5vw, 1.3rem);
+            line-height: 1.7;
+            color: #bbb;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            transition: all 0.3s ease;
+            padding: 15px;
+            border-radius: 8px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .location-year {
+            font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+            color: #888;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .interactive-btn {
+            width: clamp(50px, 6vw, 65px);
+            height: clamp(50px, 6vw, 65px);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(138, 43, 226, 0.07);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            color: #8a2be2;
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .interactive-btn:hover {
+            transform: scale(1.1);
+            background: rgba(138, 43, 226, 0.15);
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5), 
+                        0 0 20px rgba(75, 0, 130, 0.2);
+            color: #fff;
         }
         
         .cursor-follower {
@@ -234,71 +277,283 @@ description: "「YOU ARE WHAT YOU SAY」"
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(138, 43, 226, 0.6) 0%, transparent 70%);
-            box-shadow: 0 0 30px 10px rgba(138, 43, 226, 0.4);
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.5) 0%, transparent 70%);
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.3);
             pointer-events: none;
             transform: translate(-50%, -50%);
             z-index: 100;
-            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
-        }
-        
-        @keyframes glow {
-            0% { opacity: 0.3; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1.1); }
+            transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease;
+            mix-blend-mode: screen;
         }
         
         .ripple {
             position: absolute;
             border-radius: 50%;
-            background: rgba(138, 43, 226, 0.4);
-            box-shadow: 0 0 30px 10px rgba(138, 43, 226, 0.2);
-            animation: rippleEffect 1.5s forwards;
+            background: rgba(138, 43, 226, 0.3);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.2);
+            animation: rippleEffect 1.2s forwards;
             pointer-events: none;
             transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+        
+        /* 内容区域 - 滚动部分 */
+        .content-section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            margin: 15px auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: rgba(30, 30, 50, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(138, 43, 226, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(40, 40, 60, 0.5);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.15);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin: 20px 0 15px;
+            color: var(--primary-color);
+        }
+        
+        .feature-card p {
+            color: #bbb;
+            line-height: 1.6;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .contact-section {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(138, 43, 226, 0.15);
+            margin-top: 50px;
+        }
+        
+        /* 动画关键帧 */
+        @keyframes glow {
+            0% { opacity: 0.3; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1.1); }
         }
         
         @keyframes rippleEffect {
             0% {
                 width: 10px;
                 height: 10px;
-                opacity: 0.7;
+                opacity: 0.8;
             }
             100% {
-                width: 600px;
-                height: 600px;
+                width: 300px;
+                height: 300px;
                 opacity: 0;
+            }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                height: 75vh;
+            }
+            
+            .button-container {
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="interactive-background">
-        <canvas class="interactive-canvas"></canvas>
-        <div class="particles" id="particles"></div>
-    </div>
-    
+    <!-- 光标跟随元素 -->
     <div class="cursor-follower" id="cursorFollower"></div>
     
-    <div class="content">
-        <h1 class="main-title">Intelligent Machines</h1>
-        <h2 class="subtitle">Automation and AI Research Company</h2>
-        <p class="description">We build Automation Systems and Autonomous Digital Twins. Working on AGI research.</p>
-        <p class="location-year">New York City 2024</p>
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 头部导航 -->
+        <header class="header">
+            <div class="logo">INTELLIMACHINE</div>
+            <nav class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="#about">About</a>
+                <a href="#research">Research</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </header>
         
-        <div class="button-container">
-            <div class="interactive-btn">
-                <i class="fas fa-play"></i>
+        <!-- 主交互区域 -->
+        <section id="home" class="hero">
+            <!-- 互动背景 -->
+            <div class="interactive-background">
+                <canvas class="interactive-canvas"></canvas>
+                <div class="particles" id="particles"></div>
             </div>
-            <div class="interactive-btn">
-                <i class="fas fa-code"></i>
+            
+            <!-- 内容 -->
+            <h1 class="main-title">Intelligent Machines</h1>
+            <h2 class="subtitle">Automation and AI Research Company</h2>
+            <p class="description">We build Automation Systems and Autonomous Digital Twins. Working on AGI research.</p>
+            <p class="location-year">New York City • 2024</p>
+            
+            <!-- 互动按钮 -->
+            <div class="button-container">
+                <div class="interactive-btn">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="interactive-btn">
+                    <i class="fas fa-code"></i>
+                </div>
             </div>
-        </div>
+        </section>
+        
+        <!-- 服务部分 - 滚动内容 -->
+        <section id="services" class="content-section">
+            <h2 class="section-title">Our Services</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="feature-icon fas fa-robot"></i>
+                    <h3>Industrial Automation</h3>
+                    <p>Creating intelligent systems that optimize manufacturing processes, reduce costs, and improve efficiency through advanced robotics and AI algorithms.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="feature-icon fas fa-brain"></i>
+                    <h3>AI Solutions</h3>
+                    <p>Developing tailored artificial intelligence applications for data analysis, predictive maintenance, and intelligent decision-making across industries.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="feature-icon fas fa-cube"></i>
+                    <h3>Digital Twins</h3>
+                    <p>Building virtual replicas of physical systems that simulate, predict, and optimize performance throughout the asset lifecycle.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 研究部分 -->
+        <section id="research" class="content-section" style="background: rgba(15,15,25,0.5);">
+            <div class="main-container">
+                <h2 class="section-title">Research & Development</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="feature-icon fas fa-atom"></i>
+                        <h3>AGI Research</h3>
+                        <p>Pioneering work in Artificial General Intelligence with focus on learning algorithms, cognitive architectures, and ethical frameworks.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="feature-icon fas fa-network-wired"></i>
+                        <h3>Neural Systems</h3>
+                        <p>Advanced neural network development for complex problem solving, pattern recognition, and adaptive learning systems.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="feature-icon fas fa-users-cog"></i>
+                        <h3>Human-Machine Synergy</h3>
+                        <p>Exploring seamless integration of human intelligence and artificial systems for amplified capabilities and intuitive interactions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 联系方式 -->
+        <section id="contact" class="contact-section">
+            <h2 class="section-title">Contact Us</h2>
+            <p style="max-width: 600px; margin: 0 auto 30px; color: #aaa;">
+                Interested in our research or solutions? Reach out to our team of experts to discuss how we can collaborate.
+            </p>
+            <div class="button-container" style="margin-top: 30px;">
+                <div class="interactive-btn" style="border-radius: 30px; width: auto; padding: 0 25px;">
+                    <i class="fas fa-envelope" style="margin-right: 10px;"></i> Contact Team
+                </div>
+            </div>
+        </section>
+        
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2024 Intelligent Machines. All rights reserved.</p>
+            <p>New York City • Boston • San Francisco</p>
+        </footer>
     </div>
     
     <script>
+        // 优化性能：使用requestAnimationFrame
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
         // 创建动态背景
         const canvas = document.querySelector('.interactive-canvas');
         const ctx = canvas.getContext('2d');
+        let animationFrameId;
         
         // 设置canvas大小为窗口大小
         function resizeCanvas() {
@@ -309,21 +564,6 @@ description: "「YOU ARE WHAT YOU SAY」"
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
         
-        // 绘制渐变背景
-        function drawBackground() {
-            const gradient = ctx.createRadialGradient(
-                canvas.width * 0.7, canvas.height * 0.3, 0,
-                canvas.width * 0.7, canvas.height * 0.3, canvas.width * 1.5
-            );
-            
-            gradient.addColorStop(0, 'rgba(75, 0, 130, 0.2)');
-            gradient.addColorStop(0.6, 'rgba(75, 0, 130, 0.08)');
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-        
         // 创建流动光点
         class GlowParticle {
             constructor() {
@@ -333,19 +573,18 @@ description: "「YOU ARE WHAT YOU SAY」"
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
                 this.hue = Math.random() > 0.5 ? 268 : 259; // 紫色或蓝色调
-                this.brightness = Math.random() * 40 + 20; // 20-60%
-                this.alpha = Math.random() * 0.4 + 0.1; // 0.1-0.5
+                this.alpha = Math.random() * 0.3 + 0.1;
             }
             
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
                 
-                // 如果粒子移出画布，重置
+                // 边界检查
                 if (this.x < 0 || this.x > canvas.width || 
                     this.y < 0 || this.y > canvas.height) {
                     this.reset();
@@ -355,14 +594,14 @@ description: "「YOU ARE WHAT YOU SAY」"
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${this.hue}, 80%, ${this.brightness}%, ${this.alpha})`;
+                ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${this.alpha})`;
                 ctx.fill();
             }
         }
         
         // 初始化粒子
         const particles = [];
-        const particleCount = 150;
+        const particleCount = 80; // 减少粒子数量以提高性能
         
         for (let i = 0; i < particleCount; i++) {
             particles.push(new GlowParticle());
@@ -370,28 +609,42 @@ description: "「YOU ARE WHAT YOU SAY」"
         
         // 动画循环
         function animate() {
-            // 清除画布（使用半透明覆盖创造拖尾效果）
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            animationFrameId = requestAnimationFrame(animate);
             
-            // 绘制背景
-            drawBackground();
+            // 清除画布（使用半透明覆盖创造拖尾效果）
+            ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             // 更新和绘制粒子
             particles.forEach(particle => {
                 particle.update();
                 particle.draw();
             });
-            
-            requestAnimationFrame(animate);
         }
         
-        animate();
+        // 仅当背景在视口内时运行动画
+        function handleIntersection(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!animationFrameId) {
+                        animate();
+                    }
+                } else {
+                    if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+                        animationFrameId = null;
+                    }
+                }
+            });
+        }
+        
+        const observer = new IntersectionObserver(handleIntersection);
+        observer.observe(canvas);
         
         // 创建星星粒子效果
         const particlesContainer = document.getElementById('particles');
         
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 40; i++) {
             const particle = document.createElement('div');
             particle.classList.add('particle');
             particle.style.left = `${Math.random() * 100}%`;
@@ -400,65 +653,72 @@ description: "「YOU ARE WHAT YOU SAY」"
             particlesContainer.appendChild(particle);
         }
         
-        // 鼠标跟随效果
+        // 优化光标跟随效果
         const cursorFollower = document.getElementById('cursorFollower');
+        let followerX = mouseX;
+        let followerY = mouseY;
         
+        function updateCursorFollower() {
+            const dx = mouseX - followerX;
+            const dy = mouseY - followerY;
+            
+            // 缓动效果
+            followerX += dx * 0.15;
+            followerY += dy * 0.15;
+            
+            cursorFollower.style.left = `${followerX}px`;
+            cursorFollower.style.top = `${followerY}px`;
+            
+            requestAnimationFrame(updateCursorFollower);
+        }
+        
+        updateCursorFollower();
+        
+        // 添加涟漪效果（优化）
         document.addEventListener('mousemove', e => {
-            cursorFollower.style.left = `${e.clientX}px`;
-            cursorFollower.style.top = `${e.pageY}px`;
-            
-            // 创建涟漪效果
-            const ripple = document.createElement('div');
-            ripple.classList.add('ripple');
-            ripple.style.left = `${e.clientX}px`;
-            ripple.style.top = `${e.pageY}px`;
-            document.body.appendChild(ripple);
-            
-            // 自动移除涟漪元素
-            setTimeout(() => {
-                ripple.remove();
-            }, 1500);
+            // 限制涟漪频率
+            if (Math.random() > 0.8) {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${e.clientX}px`;
+                ripple.style.top = `${e.clientY}px`;
+                document.body.appendChild(ripple);
+                
+                // 自动移除涟漪元素
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1200);
+            }
         });
         
-        // 当鼠标在可交互元素上时放大跟随器
-        const interactiveElements = document.querySelectorAll('.main-title, .subtitle, .description, .interactive-btn');
+        // 当鼠标在可交互元素上时改变跟随器效果
+        const interactiveElements = document.querySelectorAll('a, .main-title, .subtitle, .description, .interactive-btn, .feature-card');
         
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
-                cursorFollower.style.width = '50px';
-                cursorFollower.style.height = '50px';
-                cursorFollower.style.background = 'radial-gradient(circle, rgba(138, 43, 226, 0.8) 0%, transparent 70%)';
+                cursorFollower.style.width = '45px';
+                cursorFollower.style.height = '45px';
+                cursorFollower.style.background = 'radial-gradient(circle, rgba(138, 43, 226, 0.7) 0%, transparent 70%)';
             });
             
             el.addEventListener('mouseleave', () => {
                 cursorFollower.style.width = '30px';
                 cursorFollower.style.height = '30px';
-                cursorFollower.style.background = 'radial-gradient(circle, rgba(138, 43, 226, 0.6) 0%, transparent 70%)';
+                cursorFollower.style.background = 'radial-gradient(circle, rgba(138, 43, 226, 0.5) 0%, transparent 70%)';
             });
         });
         
-        // 按钮互动效果
-        const buttons = document.querySelectorAll('.interactive-btn');
-        
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                const clone = button.cloneNode(true);
-                clone.style.position = 'fixed';
-                clone.style.zIndex = '1000';
-                clone.style.left = `${button.getBoundingClientRect().left}px`;
-                clone.style.top = `${button.getBoundingClientRect().top}px`;
-                document.body.appendChild(clone);
-                
-                // 按钮点击扩散动画
-                setTimeout(() => {
-                    clone.style.transform = 'scale(2)';
-                    clone.style.opacity = '0';
-                    clone.style.transition = 'all 0.6s ease';
-                }, 50);
-                
-                setTimeout(() => {
-                    clone.remove();
-                }, 700);
+        // 平滑滚动导航
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
     </script>
