@@ -37,9 +37,23 @@ python setup.py install
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intelligent Machines - Interactive Page</title>
+    <title>Intelligent Machines</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-purple: #7b1fa2;
+            --secondary-purple: #9c27b0;
+            --accent-blue: #2962ff;
+            --dark-text: #333;
+            --medium-text: #555;
+            --light-text: #777;
+            --white: #ffffff;
+            --light-bg: #f9f9f9;
+            --border-color: rgba(123, 31, 162, 0.1);
+            --card-shadow: 0 8px 30px rgba(123, 31, 162, 0.1);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -47,173 +61,48 @@ python setup.py install
         }
         
         body {
-            background: #000;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
+            background: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
+            overflow-x: hidden;
+            position: relative;
         }
         
-        .interactive-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        .interactive-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .content {
-            text-align: center;
-            max-width: 800px;
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            z-index: 10;
-        }
-        
-        .main-title {
-            font-size: 5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-            text-transform: uppercase;
             position: relative;
-            transition: all 0.4s ease;
+            z-index: 20;
         }
         
-        .main-title:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 15px rgba(138, 43, 226, 0.7), 0 0 30px rgba(75, 0, 130, 0.5);
-            cursor: default;
-        }
-        
-        .subtitle {
-            font-size: 1.6rem;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #aaa;
-            margin-bottom: 3rem;
-            transition: all 0.4s ease;
-            position: relative;
-        }
-        
-        .subtitle:hover {
-            color: #fff;
-            letter-spacing: 5px;
-        }
-        
-        .description {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #bbb;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            transition: all 0.3s ease;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        
-        .description:hover {
-            background: rgba(75, 0, 130, 0.1);
-            box-shadow: 0 0 20px rgba(75, 0, 130, 0.3);
-            transform: translateY(-3px);
-        }
-        
-        .location-year {
-            font-size: 1.1rem;
-            color: #888;
-            margin-bottom: 2rem;
-            letter-spacing: 1px;
-        }
-        
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .interactive-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(138, 43, 226, 0.1);
-            border: 1px solid rgba(138, 43, 226, 0.4);
-            color: #8a2be2;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .interactive-btn:hover {
-            transform: scale(1.15);
-            background: rgba(138, 43, 226, 0.2);
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.6), 
-                        0 0 30px rgba(75, 0, 130, 0.3);
-            color: #fff;
-        }
-        
-        .interactive-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(138,43,226,0.4) 0%, transparent 70%);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
-            z-index: -1;
-        }
-        
-        .interactive-btn:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-        
-        .particles {
+        /* 粒子背景 */
+        .particle-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 0;
             pointer-events: none;
-            z-index: 5;
         }
         
         .particle {
             position: absolute;
             width: 2px;
             height: 2px;
-            background: rgba(138, 43, 226, 0.7);
+            background: var(--primary-purple);
             border-radius: 50%;
-            box-shadow: 0 0 5px #8a2be2, 0 0 10px #8a2be2;
-            animation: glow 2s infinite alternate;
+            box-shadow: 0 0 3px var(--primary-purple);
+            animation: float 15s infinite linear;
+            opacity: 0.4;
         }
         
-        .particle:nth-child(2n) {
-            background: rgba(75, 0, 130, 0.7);
-            box-shadow: 0 0 5px #4b0082, 0 0 10px #4b0082;
-            animation-delay: 1s;
+        .particle.blue {
+            background: var(--accent-blue);
+            box-shadow: 0 0 3px var(--accent-blue);
         }
         
         .cursor-follower {
@@ -221,232 +110,827 @@ python setup.py install
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(138, 43, 226, 0.6) 0%, transparent 70%);
-            box-shadow: 0 0 30px 10px rgba(138, 43, 226, 0.4);
+            background: radial-gradient(circle, rgba(123, 31, 162, 0.2) 0%, transparent 70%);
+            box-shadow: 0 0 15px rgba(123, 31, 162, 0.1);
             pointer-events: none;
             transform: translate(-50%, -50%);
-            z-index: 100;
-            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
-        }
-        
-        @keyframes glow {
-            0% { opacity: 0.3; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1.1); }
+            z-index: 50;
+            transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease;
         }
         
         .ripple {
             position: absolute;
             border-radius: 50%;
-            background: rgba(138, 43, 226, 0.4);
-            box-shadow: 0 0 30px 10px rgba(138, 43, 226, 0.2);
-            animation: rippleEffect 1.5s forwards;
+            background: rgba(123, 31, 162, 0.1);
+            box-shadow: 0 0 15px rgba(123, 31, 162, 0.1);
+            animation: rippleEffect 1.2s forwards;
             pointer-events: none;
             transform: translate(-50%, -50%);
+            z-index: 5;
         }
         
+        /* 头部导航 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            position: relative;
+            z-index: 30;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-purple);
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon i {
+            color: white;
+            font-size: 18px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 35px;
+        }
+        
+        .nav-links a {
+            color: var(--medium-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-purple);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-purple);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            z-index: 20;
+        }
+        
+        .main-title {
+            font-size: clamp(3rem, 9vw, 5.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            color: var(--dark-text);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+        
+        .main-title:hover {
+            transform: scale(1.02);
+            text-shadow: 0 0 15px rgba(123, 31, 162, 0.1);
+            cursor: default;
+        }
+        
+        .subtitle {
+            font-size: clamp(1.1rem, 2.3vw, 1.5rem);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--medium-text);
+            margin-bottom: 1.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .subtitle:hover {
+            color: var(--primary-purple);
+            letter-spacing: 4px;
+        }
+        
+        .description {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            line-height: 1.8;
+            color: var(--medium-text);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            transition: all 0.3s ease;
+            padding: 15px;
+            border-radius: 8px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .divider {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--primary-purple), transparent);
+            margin: 1rem auto;
+        }
+        
+        .location-year {
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            color: var(--light-text);
+            margin-top: 1.5rem;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 35px;
+        }
+        
+        .interactive-btn {
+            width: clamp(55px, 6vw, 65px);
+            height: clamp(55px, 6vw, 65px);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--white);
+            border: 1px solid rgba(123, 31, 162, 0.2);
+            color: var(--primary-purple);
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .interactive-btn:hover {
+            transform: translateY(-5px);
+            background: var(--white);
+            box-shadow: 0 10px 25px rgba(123, 31, 162, 0.15);
+            border-color: rgba(123, 31, 162, 0.4);
+        }
+        
+        /* 服务部分 */
+        .content-section {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--dark-text);
+            position: relative;
+        }
+        
+        .section-subtitle {
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            color: var(--light-text);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            font-weight: 400;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 35px 30px;
+            transition: all 0.4s ease;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(123, 31, 162, 0.1);
+            border: 1px solid rgba(123, 31, 162, 0.2);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin: 20px 0 15px;
+            color: var(--primary-purple);
+        }
+        
+        .feature-card p {
+            color: var(--medium-text);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .feature-icon {
+            width: 65px;
+            height: 65px;
+            background: rgba(123, 31, 162, 0.05);
+            border-radius: 50%;
+            font-size: 1.8rem;
+            color: var(--primary-purple);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+            background: rgba(123, 31, 162, 0.1);
+        }
+        
+        .research-section {
+            background: var(--light-bg);
+            padding: 80px 0;
+            border-radius: 25px;
+            margin-bottom: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timeline-container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            padding: 30px 0;
+        }
+        
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: rgba(123, 31, 162, 0.1);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background: var(--white);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            width: calc(50% - 40px);
+            position: relative;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        
+        .timeline-year {
+            position: absolute;
+            top: 15px;
+            background: var(--primary-purple);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-year {
+            left: calc(50% - 30px);
+            transform: translateX(-100%);
+        }
+        
+        .timeline-item:nth-child(even) .timeline-year {
+            right: calc(50% - 30px);
+            transform: translateX(100%);
+        }
+        
+        .contact-section {
+            position: relative;
+            padding: 80px 0;
+        }
+        
+        .contact-card {
+            background: var(--white);
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-info {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .info-item {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(123, 31, 162, 0.05);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .info-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(123, 31, 162, 0.1);
+        }
+        
+        .info-item i {
+            font-size: 1.8rem;
+            color: var(--primary-purple);
+            margin-bottom: 15px;
+        }
+        
+        .info-item h4 {
+            margin-bottom: 10px;
+            color: var(--dark-text);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(123, 31, 162, 0.05);
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        /* 动画关键帧 */
         @keyframes rippleEffect {
             0% {
-                width: 10px;
-                height: 10px;
-                opacity: 0.7;
+                width: 5px;
+                height: 5px;
+                opacity: 0.6;
             }
             100% {
-                width: 600px;
-                height: 600px;
+                width: 200px;
+                height: 200px;
                 opacity: 0;
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(3px, 3px);
+            }
+            50% {
+                transform: translate(5px, -5px);
+            }
+            75% {
+                transform: translate(-3px, 3px);
+            }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                min-height: 70vh;
+            }
+            
+            .timeline-container::before {
+                left: 30px;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+            }
+            
+            .timeline-year {
+                left: 0 !important;
+                transform: none !important;
+                right: auto;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-item {
+                min-width: 100%;
+            }
+            
+            .contact-card {
+                padding: 25px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="interactive-background">
-        <canvas class="interactive-canvas"></canvas>
-        <div class="particles" id="particles"></div>
-    </div>
+    <!-- 粒子背景 -->
+    <div class="particle-bg" id="particleBg"></div>
     
+    <!-- 光标跟随元素 -->
     <div class="cursor-follower" id="cursorFollower"></div>
     
-    <div class="content">
-        <h1 class="main-title">Intelligent Machines</h1>
-        <h2 class="subtitle">Automation and AI Research Company</h2>
-        <p class="description">We build Automation Systems and Autonomous Digital Twins. Working on AGI research.</p>
-        <p class="location-year">New York City 2024</p>
+    <div class="main-container">
+        <!-- 头部导航 -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <span>INTELLIMACHINE</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="#research">Research</a>
+                <a href="#timeline">Timeline</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </header>
         
-        <div class="button-container">
-            <div class="interactive-btn">
-                <i class="fas fa-play"></i>
+        <!-- 主交互区域 -->
+        <section id="home" class="hero">
+            <h1 class="main-title">Intelligent Machines</h1>
+            <h2 class="subtitle">Automation and AI Research Company</h2>
+            
+            <div class="divider"></div>
+            
+            <p class="description">
+                We build Automation Systems and Autonomous Digital Twins. 
+                Working on AGI research to create the next generation of intelligent systems.
+            </p>
+            
+            <p class="location-year">New York City • 2024</p>
+            
+            <div class="button-container">
+                <div class="interactive-btn">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="interactive-btn">
+                    <i class="fas fa-code"></i>
+                </div>
             </div>
-            <div class="interactive-btn">
-                <i class="fas fa-code"></i>
+        </section>
+        
+        <!-- 服务部分 -->
+        <section id="services" class="content-section">
+            <h2 class="section-title">Our Services</h2>
+            <p class="section-subtitle">Innovative solutions for the future of automation and artificial intelligence</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Industrial Automation</h3>
+                    <p>Creating intelligent systems that optimize manufacturing processes, reduce costs, and improve efficiency through advanced robotics and AI algorithms.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI Solutions</h3>
+                    <p>Developing tailored artificial intelligence applications for data analysis, predictive maintenance, and intelligent decision-making across industries.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3>Digital Twins</h3>
+                    <p>Building virtual replicas of physical systems that simulate, predict, and optimize performance throughout the asset lifecycle.</p>
+                </div>
             </div>
-        </div>
+        </section>
+        
+        <!-- 研究部分 -->
+        <section id="research" class="research-section">
+            <div class="main-container">
+                <h2 class="section-title">Our Research</h2>
+                <p class="section-subtitle">Pioneering work in artificial general intelligence and autonomous systems</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-atom"></i>
+                        </div>
+                        <h3>AGI Research</h3>
+                        <p>Pioneering work in Artificial General Intelligence with focus on learning algorithms, cognitive architectures, and ethical frameworks.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h3>Neural Systems</h3>
+                        <p>Advanced neural network development for complex problem solving, pattern recognition, and adaptive learning systems.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h3>Human-Machine Synergy</h3>
+                        <p>Exploring seamless integration of human intelligence and artificial systems for amplified capabilities and intuitive interactions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 时间线部分 -->
+        <section id="timeline" class="content-section">
+            <h2 class="section-title">Company Timeline</h2>
+            <p class="section-subtitle">Key milestones in our development journey</p>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Foundation Year</h3>
+                        <p>Founded in New York with a mission to create innovative automation solutions and advance AGI research.</p>
+                    </div>
+                    <div class="timeline-year">2020</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Industrial Automation Launch</h3>
+                        <p>Successfully launched our first industrial automation system for manufacturing clients, reducing costs by 30%.</p>
+                    </div>
+                    <div class="timeline-year">2021</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Digital Twins Platform</h3>
+                        <p>Developed our proprietary Digital Twins platform for complex system simulation and optimization.</p>
+                    </div>
+                    <div class="timeline-year">2022</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>AGI Research Center</h3>
+                        <p>Opened our dedicated AGI Research Center in New York with 25 researchers working on foundational models.</p>
+                    </div>
+                    <div class="timeline-year">2023</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 联系方式 -->
+        <section id="contact" class="contact-section">
+            <div class="contact-card">
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-subtitle">Reach out to our team of experts to discuss how we can collaborate</p>
+                
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h4>Location</h4>
+                        <p>Innovation District, New York City</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <h4>Email</h4>
+                        <p>contact@intellimachine.com</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <h4>Phone</h4>
+                        <p>+1 (212) 555-7890</p>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <div class="interactive-btn" style="border-radius: 50px; width: auto; padding: 0 30px;">
+                        <i class="fas fa-paper-plane" style="margin-right: 10px;"></i> Send Message
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2024 Intelligent Machines. All rights reserved.</p>
+            <p>New York City • Boston • San Francisco</p>
+        </footer>
     </div>
     
     <script>
-        // 创建动态背景
-        const canvas = document.querySelector('.interactive-canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // 设置canvas大小为窗口大小
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        
-        // 绘制渐变背景
-        function drawBackground() {
-            const gradient = ctx.createRadialGradient(
-                canvas.width * 0.7, canvas.height * 0.3, 0,
-                canvas.width * 0.7, canvas.height * 0.3, canvas.width * 1.5
-            );
+        // 创建粒子效果（为白色背景优化）
+        function createParticles() {
+            const container = document.getElementById('particleBg');
+            const particleCount = 100;
+            const colors = ['purple', 'blue'];
             
-            gradient.addColorStop(0, 'rgba(75, 0, 130, 0.2)');
-            gradient.addColorStop(0.6, 'rgba(75, 0, 130, 0.08)');
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-        
-        // 创建流动光点
-        class GlowParticle {
-            constructor() {
-                this.reset();
-            }
-            
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
-                this.hue = Math.random() > 0.5 ? 268 : 259; // 紫色或蓝色调
-                this.brightness = Math.random() * 40 + 20; // 20-60%
-                this.alpha = Math.random() * 0.4 + 0.1; // 0.1-0.5
-            }
-            
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
                 
-                // 如果粒子移出画布，重置
-                if (this.x < 0 || this.x > canvas.width || 
-                    this.y < 0 || this.y > canvas.height) {
-                    this.reset();
+                // 随机大小和位置
+                const size = Math.random() * 2 + 1;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                
+                // 随机动画延迟
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                // 随机选择颜色
+                if (Math.random() > 0.7) {
+                    particle.classList.add(colors[Math.floor(Math.random() * colors.length)]);
                 }
-            }
-            
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${this.hue}, 80%, ${this.brightness}%, ${this.alpha})`;
-                ctx.fill();
+                
+                container.appendChild(particle);
             }
         }
         
-        // 初始化粒子
-        const particles = [];
-        const particleCount = 150;
-        
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new GlowParticle());
+        // 添加涟漪效果（优化）
+        function createRipple(e) {
+            // 限制涟漪频率
+            if (Math.random() > 0.8) {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${e.clientX}px`;
+                ripple.style.top = `${e.pageY}px`;
+                document.body.appendChild(ripple);
+                
+                // 自动移除涟漪元素
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1200);
+            }
         }
         
-        // 动画循环
-        function animate() {
-            // 清除画布（使用半透明覆盖创造拖尾效果）
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // 绘制背景
-            drawBackground();
-            
-            // 更新和绘制粒子
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-            
-            requestAnimationFrame(animate);
-        }
-        
-        animate();
-        
-        // 创建星星粒子效果
-        const particlesContainer = document.getElementById('particles');
-        
-        for (let i = 0; i < 50; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDelay = `${Math.random() * 3}s`;
-            particlesContainer.appendChild(particle);
-        }
-        
-        // 鼠标跟随效果
-        const cursorFollower = document.getElementById('cursorFollower');
+        // 优化光标跟随效果
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
         
         document.addEventListener('mousemove', e => {
-            cursorFollower.style.left = `${e.clientX}px`;
-            cursorFollower.style.top = `${e.pageY}px`;
-            
-            // 创建涟漪效果
-            const ripple = document.createElement('div');
-            ripple.classList.add('ripple');
-            ripple.style.left = `${e.clientX}px`;
-            ripple.style.top = `${e.pageY}px`;
-            document.body.appendChild(ripple);
-            
-            // 自动移除涟漪元素
-            setTimeout(() => {
-                ripple.remove();
-            }, 1500);
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            createRipple(e);
         });
         
-        // 当鼠标在可交互元素上时放大跟随器
-        const interactiveElements = document.querySelectorAll('.main-title, .subtitle, .description, .interactive-btn');
+        // 初始化光标跟随器
+        let followerX = mouseX;
+        let followerY = mouseY;
+        const cursorFollower = document.getElementById('cursorFollower');
+        
+        function updateCursorFollower() {
+            const dx = mouseX - followerX;
+            const dy = mouseY - followerY;
+            
+            // 缓动效果
+            followerX += dx * 0.15;
+            followerY += dy * 0.15;
+            
+            cursorFollower.style.left = `${followerX}px`;
+            cursorFollower.style.top = `${followerY}px`;
+            
+            requestAnimationFrame(updateCursorFollower);
+        }
+        
+        // 当鼠标在可交互元素上时改变跟随器效果
+        const interactiveElements = document.querySelectorAll('a, .main-title, .subtitle, .description, .interactive-btn, .feature-card, .info-item');
         
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
-                cursorFollower.style.width = '50px';
-                cursorFollower.style.height = '50px';
-                cursorFollower.style.background = 'radial-gradient(circle, rgba(138, 43, 226, 0.8) 0%, transparent 70%)';
+                cursorFollower.style.width = '40px';
+                cursorFollower.style.height = '40px';
+                cursorFollower.style.background = 'radial-gradient(circle, rgba(123, 31, 162, 0.3) 0%, transparent 70%)';
+                cursorFollower.style.boxShadow = '0 0 20px rgba(123, 31, 162, 0.3)';
             });
             
             el.addEventListener('mouseleave', () => {
                 cursorFollower.style.width = '30px';
                 cursorFollower.style.height = '30px';
-                cursorFollower.style.background = 'radial-gradient(circle, rgba(138, 43, 226, 0.6) 0%, transparent 70%)';
+                cursorFollower.style.background = 'radial-gradient(circle, rgba(123, 31, 162, 0.2) 0%, transparent 70%)';
+                cursorFollower.style.boxShadow = '0 0 15px rgba(123, 31, 162, 0.1)';
             });
         });
         
-        // 按钮互动效果
-        const buttons = document.querySelectorAll('.interactive-btn');
-        
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                const clone = button.cloneNode(true);
-                clone.style.position = 'fixed';
-                clone.style.zIndex = '1000';
-                clone.style.left = `${button.getBoundingClientRect().left}px`;
-                clone.style.top = `${button.getBoundingClientRect().top}px`;
-                document.body.appendChild(clone);
-                
-                // 按钮点击扩散动画
-                setTimeout(() => {
-                    clone.style.transform = 'scale(2)';
-                    clone.style.opacity = '0';
-                    clone.style.transition = 'all 0.6s ease';
-                }, 50);
-                
-                setTimeout(() => {
-                    clone.remove();
-                }, 700);
+        // 平滑滚动导航
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
             });
+        });
+        
+        // 卡片悬停效果增强
+        const cards = document.querySelectorAll('.feature-card, .info-item');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const cardRect = card.getBoundingClientRect();
+                const x = e.clientX - cardRect.left;
+                const y = e.clientY - cardRect.top;
+                
+                const centerX = cardRect.width / 2;
+                const centerY = cardRect.height / 2;
+                
+                const angleY = (x - centerX) / 25;
+                const angleX = (centerY - y) / 25;
+                
+                card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.03)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+        
+        // 页面加载时初始化效果
+        window.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            updateCursorFollower();
         });
     </script>
 </body>
